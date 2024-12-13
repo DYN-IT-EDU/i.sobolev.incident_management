@@ -7,12 +7,12 @@ annotate service.Incidents with @(
         Data : [
             {
                 $Type : 'UI.DataField',
-                Value : title,
+                Label : '{i18n>Customer}',
+                Value : customer_ID,
             },
             {
                 $Type : 'UI.DataField',
-                Label : '{i18n>Customer}',
-                Value : customer_ID,
+                Value : title,
             },
         ],
     },
@@ -48,27 +48,41 @@ annotate service.Incidents with @(
             $Type : 'UI.DataField',
             Value : title,
             Label : '{i18n>Title}',
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : customer.name,
-            Label : '{i18n>Customer}',
-        },
-        {
-            $Type : 'UI.DataField',
-            Value : status.descr,
-            Label : '{i18n>Status}',
             Criticality : status.criticality,
         },
         {
             $Type : 'UI.DataField',
+            Value : customer.name,
+            Label : '{i18n>Name1}',
+            Criticality : status.criticality,
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : status.descr,
+        },
+        {
+            $Type : 'UI.DataField',
             Value : urgency.descr,
-            Label : '{i18n>Urgency}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Label : 'customer_ID',
+            Value : customer_ID,
+        },
+        {
+            $Type : 'UI.DataField',
+            Label : 'urgency_code',
+            Value : urgency_code,
+        },
+        {
+            $Type : 'UI.DataField',
+            Label : 'status_code',
+            Value : status_code,
         },
     ],
     UI.SelectionFields : [
-        status_code,
-        urgency_code,
+        status.code,
+        urgency.code,
     ],
     UI.HeaderInfo : {
         Title : {
@@ -89,10 +103,12 @@ annotate service.Incidents with @(
             {
                 $Type : 'UI.DataField',
                 Value : status_code,
+                Label : 'Status',
             },
             {
                 $Type : 'UI.DataField',
                 Value : urgency_code,
+                Label : 'Urgency',
             },
         ],
     },
@@ -127,28 +143,56 @@ annotate service.Incidents with {
     )
 };
 
+annotate service.Status with {
+    code @(
+        Common.Label : '{i18n>Status}',
+        Common.ValueList : {
+            $Type : 'Common.ValueListType',
+            CollectionPath : 'Status',
+            Parameters : [
+                {
+                    $Type : 'Common.ValueListParameterInOut',
+                    LocalDataProperty : code,
+                    ValueListProperty : 'code',
+                },
+            ],
+        },
+        Common.ValueListWithFixedValues : true,
+        Common.Text : descr,
+    )
+};
+
+annotate service.Urgency with {
+    code @(
+        Common.Label : '{i18n>Urgency}',
+        Common.ValueList : {
+            $Type : 'Common.ValueListType',
+            CollectionPath : 'Urgency',
+            Parameters : [
+                {
+                    $Type : 'Common.ValueListParameterInOut',
+                    LocalDataProperty : code,
+                    ValueListProperty : 'code',
+                },
+            ],
+        },
+        Common.ValueListWithFixedValues : true,
+        Common.Text : descr,
+    )
+};
+
 annotate service.Incidents with {
     status @(
-        Common.Label : '{i18n>Status}',
-        Common.ValueListWithFixedValues : true,
         Common.Text : status.descr,
+        Common.ValueListWithFixedValues : true,
     )
 };
 
 annotate service.Incidents with {
     urgency @(
-        Common.Label : '{i18n>Urgency}',
-        Common.ValueListWithFixedValues : true,
         Common.Text : urgency.descr,
+        Common.ValueListWithFixedValues : true,
     )
-};
-
-annotate service.Status with {
-    code @Common.Text : descr
-};
-
-annotate service.Urgency with {
-    code @Common.Text : descr
 };
 
 annotate service.Incidents.conversation with @(
@@ -170,4 +214,3 @@ annotate service.Incidents.conversation with @(
         },
     ]
 );
-
